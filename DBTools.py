@@ -1,5 +1,7 @@
 import pyorient
 import json
+import re
+
 
 def reset_db(client, name):
 
@@ -40,7 +42,7 @@ def printJSONDB(filepath):
         print(degreeLists)
         print("")
 
-def loadDB(filepath):
+def loadDBOriginal(filepath):
 
     #database name
     dbname = "agen"
@@ -66,6 +68,50 @@ def loadDB(filepath):
     #loop through each key in the json database and create a new vertex, V with the id in the database
     for key in data:
         client.command("CREATE VERTEX SET id = '" + key + "'")
+
+    #loop through each key creating edges from advisor to advise
+    for key in data:
+        advisorNodeId = str(getrid(client,key))
+        for student in data.get(key)["students"]:
+            studentNodeId = str(getrid(client,student))
+            client.command("CREATE EDGE FROM " + advisorNodeId + " TO " + studentNodeId)
+
+    client.close()
+
+def loadDB(filepath):
+
+    #database name
+    dbname = "agen"
+    #database login is root by default
+    login = "root"
+    #database password, set by docker param
+    password = "rootpwd"
+
+    #create client to connect to local orientdb docker container
+    client = pyorient.OrientDB("localhost", 2424)
+    session_id = client.connect(login, password)
+
+    #remove old database and create new one
+    reset_db(client,dbname)
+
+    #open the database we are interested in
+    client.db_open(dbname, login, password)
+
+    client.command("CREATE CLASS Person EXTENDS V")
+    client.command("CREATE PROPERTY Person.id Integer")
+    client.command("CREATE PROPERTY Person.name String")
+
+    #open and parse local json file
+    with open(filepath) as f:
+        data = json.load(f)
+
+    #loop through each key in the json database and create a new vertex, V with the id in the database
+    for key in data:
+        #name = data.get(key).get("name")
+        name = re.sub("'", "", data.get(key).get("name"))
+
+        #print("CREATE VERTEX Person SET id = '" + key + "', name = '" + name + "'")
+        client.command("CREATE VERTEX Person SET id = '" + key + "', name = '" + name + "'")
 
     #loop through each key creating edges from advisor to advise
     for key in data:

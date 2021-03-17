@@ -16,7 +16,7 @@ from DBTools import shortestPath
 filepath = 'master.json'
 
 #example of how to parse elements from JSON file
-printJSONDB(filepath)
+#printJSONDB(filepath)
 
 #loadDB with JSON data, removing existing database if it exist
 #comment the load command after the database is loaded
@@ -40,3 +40,12 @@ print(shortestPath(codyid,126177))
 print(shortestPath(codyid,randomPerson))
 #print rando info
 print(data.get(randomPerson))
+
+
+'''
+SELECT $path as path
+FROM (
+    TRAVERSE outE(), inV() FROM #19:58
+) 
+WHERE @rid == '17:56'
+'''
