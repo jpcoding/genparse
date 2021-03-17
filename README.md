@@ -1,3 +1,5 @@
 # genparse
 
-python Launcher.py
+To run: python Launcher.py
+
+*You might need to use python3
