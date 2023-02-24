@@ -100,6 +100,11 @@ def loadDB(filepath):
     client.command("CREATE CLASS Person EXTENDS V")
     client.command("CREATE PROPERTY Person.id Integer")
     client.command("CREATE PROPERTY Person.name String")
+    client.command("CREATE PROPERTY Person.students LINKSET Person")
+    client.command("CREATE PROPERTY Person.advisors LINKSET Person")
+    client.command("CREATE PROPERTY Person.wikiUrl STRING")
+    client.command("CREATE PROPERTY Person.wikiImage STRING")
+    client.command("CREATE PROPERTY Person.degreeLists EMBEDDEDSET STRING")
 
     #open and parse local json file
     with open(filepath) as f:
@@ -109,9 +114,23 @@ def loadDB(filepath):
     for key in data:
         #name = data.get(key).get("name")
         name = re.sub("'", "", data.get(key).get("name"))
+        
+
+
 
         #print("CREATE VERTEX Person SET id = '" + key + "', name = '" + name + "'")
         client.command("CREATE VERTEX Person SET id = '" + key + "', name = '" + name + "'")
+
+        insert_string = ''' CREATE VERTEX Person SET
+        id = {id},
+        name = {name},
+        students = {students},
+        advisors = {advisors},
+        wikiUrl ={wiki},
+        wikiImage = {wikiimg},
+        degreeLists = {degreeList}'''.format(id=key, )
+
+
 
     #loop through each key creating edges from advisor to advise
     for key in data:
