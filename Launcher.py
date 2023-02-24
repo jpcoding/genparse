@@ -30,16 +30,16 @@ with open(filepath) as f:
 codyid = 1
 
 #grab a random identifier
-randomPerson = random.choice(list(data.keys()));
+# randomPerson = random.choice(list(data.keys()));
 
-#Nicolaus Copernicus JSON id is 126177
+#Gregory Palamas JSON id is 126177
 #Distance between Cody and Copernicus
-print(shortestPath(codyid,126177))
+print(shortestPath(codyid,176844))
 
 #Distance between Cody and some rando
-print(shortestPath(codyid,randomPerson))
+# print(shortestPath(codyid,randomPerson))
 #print rando info
-print(data.get(randomPerson))
+# print(data.get(randomPerson))
 
 
 '''

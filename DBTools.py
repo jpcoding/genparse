@@ -104,7 +104,7 @@ def loadDB(filepath):
     client.command("CREATE PROPERTY Person.advisors LINKSET Person")
     client.command("CREATE PROPERTY Person.wikiUrl STRING")
     client.command("CREATE PROPERTY Person.wikiImage STRING")
-    client.command("CREATE PROPERTY Person.degreeLists EMBEDDEDSET STRING")
+    client.command("CREATE PROPERTY Person.degreeLists EMBEDDEDMAP")
 
     #open and parse local json file
     with open(filepath) as f:
@@ -113,22 +113,23 @@ def loadDB(filepath):
     #loop through each key in the json database and create a new vertex, V with the id in the database
     for key in data:
         #name = data.get(key).get("name")
-        name = re.sub("'", "", data.get(key).get("name"))
-        
-
-
-
+        # name = re.sub("'", "", data.get(key).get("name"))
         #print("CREATE VERTEX Person SET id = '" + key + "', name = '" + name + "'")
-        client.command("CREATE VERTEX Person SET id = '" + key + "', name = '" + name + "'")
+        # client.command("CREATE VERTEX Person SET id = '" + key + "', name = '" + name + "'")
 
         insert_string = ''' CREATE VERTEX Person SET
         id = {id},
-        name = {name},
+        name = "{name}",
         students = {students},
         advisors = {advisors},
-        wikiUrl ={wiki},
-        wikiImage = {wikiimg},
-        degreeLists = {degreeList}'''.format(id=key, )
+        wikiUrl = "{wikiUrl}",
+        wikiImage = "{wikiImage}",
+        degreeLists = {degreeLists}'''.format(id=data[key]['id'], name=data[key]['name'],
+        students=data[key]['students'], advisors=data[key]['advisors'],
+        wikiUrl=data[key]['wikiUrl'],wikiImage=data[key]['wikiImage'],degreeLists=data[key]['degreeLists']
+        )
+        print(insert_string)
+        client.command(insert_string)
 
 
 
