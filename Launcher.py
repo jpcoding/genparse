@@ -33,7 +33,7 @@ codyid = 1
 # randomPerson = random.choice(list(data.keys()));
 
 #Gregory Palamas JSON id is 126177
-#Distance between Cody and Copernicus
+#Distance between Cody and Gregory Palamas
 print(shortestPath(codyid,176844))
 
 #Distance between Cody and some rando
